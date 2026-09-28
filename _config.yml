@@ -12,8 +12,6 @@ timezone: Asia/Shanghai
 # jekyll-seo-tag settings
 # ↓ --------------------------
 
-avatar: /assets/img/avatar.png
-
 title: littlelerry's Blog # the main title
 
 tagline: Tech blog # it will display as the subtitle
@@ -91,7 +89,7 @@ cdn:
 
 # the avatar on sidebar, support local or CORS resources
 # e.g. '/assets/img/avatar.jpg' (put the image in assets/img/)
-avatar:
+avatar: /assets/img/avatar.png
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 social_preview_image: # string, local or CORS resources
