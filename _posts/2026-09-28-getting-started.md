@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with This Blog"
-date: 2026-09-28 20:00:00 +0800
+date: 2026-09-28 09:00:00 +0800
 categories: [Blog]
 tags: [jekyll, chirpy]
 math: true
