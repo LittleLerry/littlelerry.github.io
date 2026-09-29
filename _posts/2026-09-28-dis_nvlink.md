@@ -92,7 +92,7 @@ B issues a .ca load
 | Second window, B=0 → A=1 | 1 | 885.27 | 31.87 | 31.87 |
 | Same pair | 4,096 | 866.57 | 864.70 | 864.70 |
 
-![Requester-side reuse by load instruction](/assets/_posts/dis_nvlink/img/r01-cache_operators.png)
+![Requester-side reuse by load instruction](/assets/posts/dis_nvlink/img/r01-cache_operators.png)
 
 At one or 32 nodes, `.ca` and `.nc` are much faster than `.cg`. By 4,096 scattered nodes, that advantage is mostly gone. Absolute `.cg` latency also differs between GPU pairs, but the within-pair comparison is what matters here. The result means a peer load can reuse a requester-side cached value without a new NVLink request. If the owner later changes that value, B could read an older local copy instead of seeing the update immediately.
 
@@ -102,7 +102,7 @@ At one or 32 nodes, `.ca` and `.nc` are much faster than `.cg`. By 4,096 scatter
 
 We first saw the difference in an early latency sweep:
 
-![Local and peer load latency for the same owner](/assets/_posts/dis_nvlink/img/r01-same_owner_load_w1.png)
+![Local and peer load latency for the same owner](/assets/posts/dis_nvlink/img/r01-same_owner_load_w1.png)
 
 The left plot shows local `ld.global.cg.u64` latency as we increase the number of nodes. At 128K nodes, it stays below 200 ns. As the node count rises, so does the latency: more accesses seem to outgrow the fast cache-serving regime and require more expensive service. The right plot repeats the idea with a peer GPU issuing the loads. Its latency eventually rises too.
 
@@ -112,7 +112,7 @@ The access pattern is the same. The local load reaches the expensive regime earl
 
 We checked whether the load's scope could be responsible. Local and peer loads were each tested with `ld.relaxed.gpu.global.u64` and `ld.relaxed.sys.global.u64`, giving four scope pairings:
 
-![Local and peer latency under four load-scope pairings](/assets/_posts/dis_nvlink/img/r05-scope_panels_first.png)
+![Local and peer latency under four load-scope pairings](/assets/posts/dis_nvlink/img/r05-scope_panels_first.png)
 
 The same separation appears in every pairing. For the same issuing GPU and node count, the largest measured first-cycle difference between SYS and GPU scope is only **0.29 ns**. The local-versus-peer difference follows where the request originates, not a switch between these two scope encodings.
 
@@ -215,15 +215,15 @@ We tested how different warmup methods affect later probes of A's data. The TMA 
 
 Here are the first-probe results:
 
-![First probe traversal after TMA or matched SM preparation](/assets/_posts/dis_nvlink/img/tma-first_cycle.png)
+![First probe traversal after TMA or matched SM preparation](/assets/posts/dis_nvlink/img/tma-first_cycle.png)
 
 Each panel shows a different probe. A.TMA means TMA on A warmed A's L2; B.TMA means TMA on B accessed A's allocation over NVLink. A.SM16 and B.SM16 use the matching 16 B SM load instead. Blue marks preparation originating on A, orange preparation originating on B. With the probe held fixed, the curves mostly group by **which GPU performed the warmup**. The TMA and SM16 versions of the same origin nearly overlap; their measured differences are on the order of one SM clock cycle:
 
-![TMA versus SM preparation: first-probe latency difference](/assets/_posts/dis_nvlink/img/tma-first_preparation_difference.png)
+![TMA versus SM preparation: first-probe latency difference](/assets/posts/dis_nvlink/img/tma-first_preparation_difference.png)
 
 The second-probe results overlap even more closely:
 
-![Second probe traversal after the same preparation](/assets/_posts/dis_nvlink/img/tma-second_cycle.png)
+![Second probe traversal after the same preparation](/assets/posts/dis_nvlink/img/tma-second_cycle.png)
 
 For this workload, TMA warming leaves an L2 state very much like warming with the matched ordinary SM load. Our capacity-pressure model can also describe that behavior.
 
@@ -231,7 +231,7 @@ For this workload, TMA warming leaves an L2 state very much like warming with th
 
 Atomics in this experiment look more like peer loads: they seem less inclined to create LCN copies. We ran another warmup/probe matrix, and the atomic results resemble the peer-load results:
 
-![Preparation changes the cost of the same probe](/assets/_posts/dis_nvlink/img/r03-requested_matrix.png)
+![Preparation changes the cost of the same probe](/assets/posts/dis_nvlink/img/r03-requested_matrix.png)
 
 That gives us a plausible reason to suspect fewer LCN copies on the atomic path. If hardware already has to keep PoC and LCN copies coherent, maintaining more local copies for an atomic read-modify-write might be too expensive. That is still a hypothesis about the mechanism, rather than a direct count of LCN copies.
 
