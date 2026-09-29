@@ -1,8 +1,10 @@
-
-
-
-
-# Dissecting NVLink: Latency and the L2 Cache
+---
+title: "Dissecting NVLink: Latency and the L2 Cache"
+date: 2026-09-28 09:00:00 +0800
+categories: [Blog]
+tags: [GPU, NVLink]
+math: true
+---
 
 **TL;DR**
 
